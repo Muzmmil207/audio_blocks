@@ -25,7 +25,6 @@ def get_routes(request, format=None):
 class AudioListView(
     generics.ListAPIView,
     generics.CreateAPIView,
-    generics.DestroyAPIView
 ):
     serializer_class = AudioSerializer
 
@@ -41,8 +40,6 @@ class AudioListView(
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-    def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = Audio.objects.all()
@@ -50,8 +47,8 @@ class AudioListView(
 
 
 class AudioElementDetailsView(
+    generics.DestroyAPIView,
     generics.GenericAPIView,
-    mixins.DestroyModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
 ):
@@ -65,5 +62,5 @@ class AudioElementDetailsView(
     def post(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    def destroy(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
