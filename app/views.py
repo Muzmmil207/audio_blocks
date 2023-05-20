@@ -17,7 +17,7 @@ def get_routes(request, format=None):
 
     return Response(
         {
-            "users profiles data": reverse("audio-api", request=request, format=format),
+            "Audio elements data": reverse("audio-api", request=request, format=format),
            # "users profiles data": reverse("audio-details-api", request=request, format=format),
         }
     )
