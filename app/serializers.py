@@ -52,9 +52,6 @@ class AudioSerializer(serializers.ModelSerializer):
         return instance
 
     def validate(self, data):
-        """
-        Check that start is before finish.
-        #"""
         if data["type"] != "video_music" and data["video_component_id"]:
             raise serializers.ValidationError("This audio type must not have an video_component_id")
         if data["type"] == "video_music" and not data["video_component_id"]:
@@ -67,9 +64,6 @@ class AudioSerializer(serializers.ModelSerializer):
         return data
 
     def validate_type(self, value):
-        """
-        Check that the blog post is about Django.
-        """
         if value not in Audio.AudioType:
             raise serializers.ValidationError("invalid audio type")
         return value

@@ -18,7 +18,6 @@ def get_routes(request, format=None):
     return Response(
         {
             "Audio elements data": reverse("audio-api", request=request, format=format),
-           # "users profiles data": reverse("audio-details-api", request=request, format=format),
         }
     )
 
@@ -26,6 +25,7 @@ def get_routes(request, format=None):
 class AudioListView(
     generics.ListAPIView,
     generics.CreateAPIView,
+    generics.DestroyAPIView
 ):
     serializer_class = AudioSerializer
 
@@ -34,13 +34,15 @@ class AudioListView(
 
     def post(self, request, format=None):
         data = request.data
-        print(data)
         serializer = AudioSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = Audio.objects.all()
