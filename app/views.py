@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 from app.models import Audio
 
-from .serializers import AudioSerializer
+from .serializers import AudioFragmentsSerializer, AudioSerializer
 
 
 @api_view(["GET"])
@@ -27,7 +27,7 @@ class AudioListView(
     generics.CreateAPIView,
 ):
     serializer_class = AudioSerializer
-
+        
     def get(self, request, format=None):
         return self.list(request)
 
@@ -42,9 +42,18 @@ class AudioListView(
         
 
     def get_queryset(self):
-        queryset = Audio.objects.all()
-        return queryset
+        queryset = Audio.objects.all().prefetch_related('duration')
 
+        start = self.request.query_params.get('start')
+        end = self.request.query_params.get('end')
+        if (start and end) and (start.isdigit() and end.isdigit()):
+            self.serializer_class = AudioFragmentsSerializer
+            queryset = queryset.filter(
+                    duration__start_time__range=(start,end),
+                    duration__end_time__range=(start,end)
+        
+                )
+        return queryset
 
 class AudioElementDetailsView(
     generics.DestroyAPIView,

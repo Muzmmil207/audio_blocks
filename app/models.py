@@ -7,6 +7,8 @@ from django.utils.translation import gettext_lazy as _
 
 class Audio(Model):
     class AudioType(models.TextChoices):
+        '''Audio type choices'''
+
         VOICE_Over = "vo", _("Voice Over")
         BACKGROUND_Music = "bg_music", _("Background Music")
         VIDEO_Music = "video_music", _("Video Music ")
@@ -51,9 +53,27 @@ class Audio(Model):
         verbose_name_plural = "Audios"
         ordering = ["-pk"]
 
-    def __str__(self):
-        return "audio_file"
 
+    @property
+    def volume(self):
+        duration = self.duration
+        if self.type == 'vo':
+            if (duration.start_time,duration.end_time) == (5,10):
+                return 100
+            elif(duration.start_time,duration.end_time) == (10,20):
+                return 75
+        elif self.type == 'bg_music':
+            if (duration.start_time,duration.end_time) == (10,20):
+                return 25
+            elif(duration.start_time,duration.end_time) == (25,30):
+                return 100
+        elif self.type == 'video_music':
+            if (duration.start_time,duration.end_time) == (15,25):
+                return 50
+            elif(duration.start_time,duration.end_time) == (25,30):
+                return 100
+                
+        return 100
 
 class AudioDuration(Model):
     audio_element = models.OneToOneField(

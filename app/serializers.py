@@ -28,7 +28,7 @@ class AudioSerializer(serializers.ModelSerializer):
             "url",
             "duration",
         ]
-
+    
     def create(self, validated_data):
         audio_duration_data = validated_data.pop("duration")
         audio = Audio.objects.create(**validated_data)
@@ -67,3 +67,20 @@ class AudioSerializer(serializers.ModelSerializer):
         if value not in Audio.AudioType:
             raise serializers.ValidationError("invalid audio type")
         return value
+
+
+
+class AudioFragmentsSerializer(serializers.ModelSerializer):
+
+    duration = AudioDurationSerializer()
+    volume =serializers.CharField()
+    class Meta:
+        model = Audio
+        fields = [
+            "id",
+            "url",
+            'volume',
+            "type",
+            "duration",
+        ]
+        
